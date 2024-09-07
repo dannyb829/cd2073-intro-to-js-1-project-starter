@@ -1,5 +1,6 @@
 const cart = require('../src/assets/script.js');
 
+
 describe('Cart Functionality Tests', () => {
     let product1 = cart.products[1];
     let cartArr = cart.cart;
@@ -46,6 +47,22 @@ describe('Checkout Functionality Tests', () => {
     let product2 = cart.products[2];
     let cartArr = cart.cart;
 
+    // could not get get cart.exchangeRate to reflect changes made ..
+    //  in script.js so i created this function to run an accurate test
+
+    const testExchangeValue = (exchange) => {
+        switch (exchange) {
+            // rate for euro calculation
+            case 'EUR':
+                return .9
+            // rate for yen calculation
+            case 'YEN':
+                return 143.31
+            default:
+                // USD default
+                return 1
+        }
+    }
     // Functiion get's grand total of cart
     function grandTotal() {
         let cartSum = 0;
@@ -75,4 +92,16 @@ describe('Checkout Functionality Tests', () => {
         cart.addProductToCart(product2.productId);
         expect(cart.pay(1)).toBeLessThan(grandTotal());
     });
+
+    test('currency() changes total amount due as expected', () => {
+        cart.addProductToCart(product1.productId);
+        cart.addProductToCart(product2.productId);
+        cart.currency('YEN')
+        expect(cart.cartTotal()).toEqual(grandTotal() * testExchangeValue('YEN'));
+    });
+
+    test('Udacity is awesome', () => {
+        udacityIsAwesome = true
+        expect(udacityIsAwesome).toEqual(true)
+    })
 });

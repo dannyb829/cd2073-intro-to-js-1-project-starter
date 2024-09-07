@@ -1,4 +1,6 @@
 /* Create an array named products which you will use to add all of your product object literals that you create in the next step. */
+// value of exchange rate for currency()
+let exchangeRate = 1
 
 /* Create 3 or more product objects using object literal notation 
 Each product should include five properties
@@ -10,21 +12,27 @@ Each product should include five properties
 */
 
 const products = [
-  {name: "cherry",
-  price: 2.50,
-quantity: 0,
-productId: 1,
-image: "./images/cherry.jpg"},
-  {name: "orange",
-  price: 4.50,
-quantity: 0,
-productId: 2,
-image: "./images/orange.jpg"},
-  {name: "strawberry",
-  price: 6.50,
-quantity: 0,
-productId: 3,
-image: "./images/strawberry.jpg"}
+  {
+    name: "cherry",
+    price: 2.50,
+    quantity: 0,
+    productId: 1,
+    image: "./images/cherry.jpg"
+  },
+  {
+    name: "orange",
+    price: 4.50,
+    quantity: 0,
+    productId: 2,
+    image: "./images/orange.jpg"
+  },
+  {
+    name: "strawberry",
+    price: 6.50,
+    quantity: 0,
+    productId: 3,
+    image: "./images/strawberry.jpg"
+  }
 ]
 
 /* Images provided in /images folder. All images from Unsplash.com
@@ -37,8 +45,6 @@ image: "./images/strawberry.jpg"}
 
 let cart = []
 
-// value of exchange rate for currency()
-let exchangeRate = 1
 
 /* Create a function named addProductToCart that takes in the product productId as an argument
   - addProductToCart should get the correct product based on the productId
@@ -48,16 +54,17 @@ let exchangeRate = 1
 
 const addProductToCart = (id) => {
   for (const product of products) {
-
-      if (product.productId === id) {
-       if (product.quantity === 0) {
+    // iterate over products
+    // match ove product id, then push into cart/ increment quantity
+    if (product.productId === id) {
+      if (product.quantity === 0) {
         cart.push(product)
-        product.quantity++ 
-        }
-       else {
-          product.quantity++
-        }
+        product.quantity++
       }
+      else {
+        product.quantity++
+      }
+    }
 
   }
 }
@@ -69,10 +76,11 @@ const addProductToCart = (id) => {
 
 const increaseQuantity = (id) => {
   for (const product of products) {
+    //identify with id, increment quantity
     if (product.productId === id) {
-        product.quantity++
-      }
+      product.quantity++
     }
+  }
 }
 
 /* Create a function named decreaseQuantity that takes in the productId as an argument
@@ -81,45 +89,47 @@ const increaseQuantity = (id) => {
 - if the function decreases the quantity to 0, the product is removed from the cart
 */
 const decreaseQuantity = (id) => {
+  // identify on id / decrement quantity
   for (const product of products) {
     if (product.productId === id) {
-        product.quantity -= 1
-        if (product.quantity === 0) {
-          removeProductFromCart(product.productId)
-        }
+      product.quantity -= 1
+      if (product.quantity === 0) {
+        removeProductFromCart(product.productId)
       }
     }
   }
-  
-  /* Create a function named removeProductFromCart that takes in the productId as an argument
-  - removeProductFromCart should get the correct product based on the productId
-  - removeProductFromCart should update the product quantity to 0
-  - removeProductFromCart should remove the product from the cart
-  */
- 
- const removeProductFromCart = (id) => {
+}
+
+/* Create a function named removeProductFromCart that takes in the productId as an argument
+- removeProductFromCart should get the correct product based on the productId
+- removeProductFromCart should update the product quantity to 0
+- removeProductFromCart should remove the product from the cart
+*/
+
+const removeProductFromCart = (id) => {
+  // iterate over cart as well as product list/ update both accordingly
   for (const product of products) {
     if (product.productId === id) {
-        product.quantity = 0
-      }
+      product.quantity = 0
     }
+  }
   for (let i = 0; i < cart.length; i++) {
     if (cart[i].productId === id) {
-        cart.splice(i,1)
-      }
+      cart.splice(i, 1)
     }
-    
   }
-  
-  /* Create a function named cartTotal that has no parameters
-  - cartTotal should iterate through the cart to get the total of all products
-  - cartTotal should return the sum of the products in the cart
-  */
- 
- const cartTotal = () => {
-   let total = 0
-   
-   for (const product of cart) {
+
+}
+
+/* Create a function named cartTotal that has no parameters
+- cartTotal should iterate through the cart to get the total of all products
+- cartTotal should return the sum of the products in the cart
+*/
+
+const cartTotal = () => {
+  let total = 0
+  // iterate over cart/ count all items price, multiplied by quantity
+  for (const product of cart) {
     total += (product.price * product.quantity * exchangeRate)
   }
 
@@ -129,9 +139,12 @@ const decreaseQuantity = (id) => {
 /* Create a function called emptyCart that empties the products from the cart */
 
 const emptyCart = () => {
+  // new cart array / iterate over products to reset quantity
   for (product of products) {
-    removeProductFromCart(product.productId)
-    }
+    product.quantity = 0
+  }
+
+  cart = []
 }
 
 /* Create a function named pay that takes in an amount as an argument
@@ -140,7 +153,7 @@ const emptyCart = () => {
 */
 
 const pay = (amount) => {
-
+  // subtract actual total from payment instead of other way around to account for negative values
   return amount - cartTotal()
 
 }
@@ -150,21 +163,21 @@ const pay = (amount) => {
 
 
 function currency(exchange) {
-//switch on amount value
+  //switch on exchange string value
   switch (exchange) {
-  // rate for euro calculation
-  case 'EUR':
-    exchangeRate = .9
-    break;
-  // rate for yen calculation
-  case 'YEN':
-    exchangeRate = 143.31
-    break;
-  default:
-  // USD default
-    exchangeRate = 1
-    break;
-}
+    // rate for euro calculation
+    case 'EUR':
+      exchangeRate = .9
+      break;
+    // rate for yen calculation
+    case 'YEN':
+      exchangeRate = 143.31
+      break;
+    default:
+      // USD default
+      exchangeRate = 1
+      break;
+  }
 
 
 }
@@ -184,8 +197,9 @@ module.exports = {
   decreaseQuantity,
   removeProductFromCart,
   cartTotal,
-  pay, 
+  pay,
   emptyCart,
   /* Uncomment the following line if completing the currency converter bonus */
-  currency
+  currency,
+  exchangeRate
 }

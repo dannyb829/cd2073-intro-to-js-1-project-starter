@@ -1,4 +1,5 @@
 
+
 let currencySymbol = '$';
 
 // Draws product list
@@ -10,7 +11,7 @@ function drawProducts() {
             <div data-productId='${element.productId}'>
                 <img src='${element.image}'>
                 <h3>${element.name}</h3>
-                <p>price: ${currencySymbol}${element.price}</p>
+                <p>price: ${currencySymbol}${(element.price * exchangeRate).toFixed(2)}</p>
                 <button class="add-to-cart">Add to Cart</button>
             </div>
         `;
@@ -25,14 +26,14 @@ function drawCart() {
     // clear cart before drawing
     let cartItems = '';
     cart.forEach((element) => {
-        let itemTotal = element.price * element.quantity;
+        let itemTotal = (element.price * element.quantity) * exchangeRate;
 
         cartItems += `
             <div data-productId='${element.productId}'>
                 <h3>${element.name}</h3>
-                <p>price: ${currencySymbol}${element.price}</p>
+                <p>price: ${currencySymbol}${(element.price * exchangeRate).toFixed(2)}</p>
                 <p>quantity: ${element.quantity}</p>
-                <p>total: ${currencySymbol}${itemTotal}</p>
+                <p>total: ${currencySymbol}${itemTotal.toFixed(2)}</p>
                 <button class="qup">+</button>
                 <button class="qdown">-</button>
                 <button class="remove">remove</button>
@@ -54,7 +55,7 @@ function drawCheckout() {
     let cartSum = cartTotal();
 
     let div = document.createElement('div');
-    div.innerHTML = `<p>Cart Total: ${currencySymbol}${cartSum}`;
+    div.innerHTML = `<p>Cart Total: ${currencySymbol}${cartSum.toFixed(2)}`;
     checkout.append(div);
 }
 
