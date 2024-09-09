@@ -1,6 +1,5 @@
 /* Create an array named products which you will use to add all of your product object literals that you create in the next step. */
-// value of exchange rate for currency()
-let exchangeRate = 1
+
 
 /* Create 3 or more product objects using object literal notation 
 Each product should include five properties
@@ -42,8 +41,13 @@ const products = [
 */
 
 /* Declare an empty array named cart to hold the items in the cart */
+// value of exchange rate for currency() to be used in all price calculations
+let exchangeRate = 1
 
 let cart = []
+
+// variable to mark amount paid by customer
+let totalPaid = 0
 
 
 /* Create a function named addProductToCart that takes in the product productId as an argument
@@ -52,21 +56,32 @@ let cart = []
   - if the product is not already in the cart, add it to the cart
 */
 
-const addProductToCart = (id) => {
-  for (const product of products) {
-    // iterate over products
-    // match ove product id, then push into cart/ increment quantity
-    if (product.productId === id) {
-      if (product.quantity === 0) {
-        cart.push(product)
-        product.quantity++
-      }
-      else {
-        product.quantity++
-      }
-    }
+//Helper function findProduct() used in most functions
 
+const findProduct = (id, list, callBack) => {
+  // uses id of item, list to be operated on whether cart or product list
+  // specified operation on product in form of call back
+  for (const item of list) {
+    if (item.productId === id) {
+      callBack(item)
+    }
   }
+}
+
+const addProductToCart = (id) => {
+
+  findProduct(id, products, product => {
+    //after product found, if no quantity then its not in cart. push to cart.
+    // then increment quantity
+    if (product.quantity === 0) {
+      cart.push(product)
+    }
+    product.quantity++
+
+  })
+
+
+
 }
 
 /* Create a function named increaseQuantity that takes in the productId as an argument
@@ -75,12 +90,9 @@ const addProductToCart = (id) => {
 */
 
 const increaseQuantity = (id) => {
-  for (const product of products) {
-    //identify with id, increment quantity
-    if (product.productId === id) {
-      product.quantity++
-    }
-  }
+
+  findProduct(id, products, product => product.quantity++)
+
 }
 
 /* Create a function named decreaseQuantity that takes in the productId as an argument
@@ -90,14 +102,16 @@ const increaseQuantity = (id) => {
 */
 const decreaseQuantity = (id) => {
   // identify on id / decrement quantity
-  for (const product of products) {
-    if (product.productId === id) {
-      product.quantity -= 1
-      if (product.quantity === 0) {
-        removeProductFromCart(product.productId)
-      }
+
+  findProduct(id, products, product => {
+
+    product.quantity -= 1
+    if (product.quantity === 0) {
+      removeProductFromCart(product.productId)
     }
-  }
+
+  })
+
 }
 
 /* Create a function named removeProductFromCart that takes in the productId as an argument
@@ -108,15 +122,14 @@ const decreaseQuantity = (id) => {
 
 const removeProductFromCart = (id) => {
   // iterate over cart as well as product list/ update both accordingly
-  for (const product of products) {
-    if (product.productId === id) {
-      product.quantity = 0
-    }
-  }
+  // removing specific product from both arrays
+  findProduct(id, products, product => {
+    product.quantity = 0
+  })
+  // Could have used the ƒ findProduct below but its a bit tricky getting the index num,
+  // for the splice method, this code works better
   for (let i = 0; i < cart.length; i++) {
-    if (cart[i].productId === id) {
-      cart.splice(i, 1)
-    }
+    if (cart[i].productId === id) cart.splice(i, 1)
   }
 
 }
@@ -126,23 +139,36 @@ const removeProductFromCart = (id) => {
 - cartTotal should return the sum of the products in the cart
 */
 
+// operateOnList performs a specified operation through a callBack function over a given array
+const operateOnList = (list, callBack) => {
+  for (const item of list) {
+    callBack(item)
+  }
+}
+
+
+//cartTotal iterates over cart counting all items price, 
+// multiplied by quantity providing collective total
 const cartTotal = () => {
   let total = 0
-  // iterate over cart/ count all items price, multiplied by quantity
-  for (const product of cart) {
-    total += (product.price * product.quantity * exchangeRate)
+
+  for (const item of cart) {
+    total += item.price * item.quantity * exchangeRate
   }
 
   return total
+
 }
 
 /* Create a function called emptyCart that empties the products from the cart */
 
 const emptyCart = () => {
-  // new cart array / iterate over products to reset quantity
-  for (product of products) {
+  //  iterate over products to reset quantity using operateOnList helper 
+  //  overwriting to new cart 
+  operateOnList(products, product => {
     product.quantity = 0
-  }
+
+  })
 
   cart = []
 }
@@ -153,8 +179,22 @@ const emptyCart = () => {
 */
 
 const pay = (amount) => {
-  // subtract actual total from payment instead of other way around to account for negative values
-  return amount - cartTotal()
+  // adds to amount paid by customer
+  totalPaid += amount
+  // if customer has reached amount to be paid or paid above price then
+  if (cartTotal() <= totalPaid) {
+    //calculate amount to be returned to customer in separate variable to be returned
+    const returnToCustomer = totalPaid - cartTotal()
+    // empty cart as well as reset total paid value
+    emptyCart()
+    totalPaid = 0
+    return returnToCustomer
+  }
+  //given previous return statement no need for else clause
+  //if customer has not reached amount due after payment
+  // remaining balance to be returned
+
+  return totalPaid - cartTotal()
 
 }
 
@@ -184,9 +224,9 @@ function currency(exchange) {
 
 
 /* The following is for running unit tests. 
-   To fully complete this project, it is expected that all tests pass.
-   Run the following command in terminal to run tests
-   npm run test
+  To fully complete this project, it is expected that all tests pass.
+  Run the following command in terminal to run tests
+  npm run test
 */
 
 module.exports = {

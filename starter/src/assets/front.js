@@ -1,5 +1,6 @@
 
 
+
 let currencySymbol = '$';
 
 // Draws product list
@@ -119,13 +120,18 @@ document.querySelector('.pay').addEventListener('click', (e) => {
 
     // If total cash received is greater than cart total thank customer
     // Else request additional funds
+
     if (cashReturn >= 0) {
         div.innerHTML = `
             <p>Cash Received: ${currencySymbol}${amount}</p>
             <p>Cash Returned: ${currencySymbol}${cashReturn}</p>
-            <p>Thank you!</p>
+            <p>Thank you! Great rest of your day!</p>
         `;
-    } else {
+        // reset of cart and checkout after successful purchase to reflect on DOM
+        drawCart()
+        drawCheckout()
+    }
+    else {
         // reset cash field for next entry
         document.querySelector('.received').value = '';
         div.innerHTML = `
@@ -152,7 +158,6 @@ function dropCart(){
         drawCheckout()
     })
     shoppingCart.append(div);
-    console.log(emptyCart)
 }
 dropCart();
 
@@ -182,8 +187,9 @@ document.querySelector('.currency-select').addEventListener('change', function h
         default:
             currencySymbol = '$';
             break;
-     }
-
+    }
+    //on change of select insert currency string as argument to ƒ currency,
+    // then redraw to update dom                          
     currency(event.target.value);
     drawProducts();
     drawCart();

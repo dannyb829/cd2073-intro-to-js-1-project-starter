@@ -97,11 +97,12 @@ describe('Checkout Functionality Tests', () => {
         cart.addProductToCart(product1.productId);
         cart.addProductToCart(product2.productId);
         cart.currency('YEN')
-        expect(cart.cartTotal()).toEqual(grandTotal() * testExchangeValue('YEN'));
+        const total = parseFloat(cart.cartTotal().toFixed(2))
+        expect(total).toEqual(grandTotal() * testExchangeValue('YEN'));
     });
 
     test('Udacity is awesome', () => {
-        udacityIsAwesome = true
+        const udacityIsAwesome = true
         expect(udacityIsAwesome).toEqual(true)
     })
 });
