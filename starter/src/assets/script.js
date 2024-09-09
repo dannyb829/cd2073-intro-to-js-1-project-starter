@@ -58,7 +58,7 @@ let totalPaid = 0
 
 //Helper function findProduct() used in most functions
 
-const findProduct = (id, list, callBack) => {
+function findProduct(id, list, callBack) {
   // uses id of item, list to be operated on whether cart or product list
   // specified operation on product in form of call back
   for (const item of list) {
@@ -68,7 +68,7 @@ const findProduct = (id, list, callBack) => {
   }
 }
 
-const addProductToCart = (id) => {
+function addProductToCart(id) {
 
   findProduct(id, products, product => {
     //after product found, if no quantity then its not in cart. push to cart.
@@ -89,7 +89,7 @@ const addProductToCart = (id) => {
   - increaseQuantity should then increase the product's quantity
 */
 
-const increaseQuantity = (id) => {
+function increaseQuantity(id) {
 
   findProduct(id, products, product => product.quantity++)
 
@@ -100,7 +100,7 @@ const increaseQuantity = (id) => {
 - decreaseQuantity should decrease the quantity of the product
 - if the function decreases the quantity to 0, the product is removed from the cart
 */
-const decreaseQuantity = (id) => {
+function decreaseQuantity(id) {
   // identify on id / decrement quantity
 
   findProduct(id, products, product => {
@@ -120,7 +120,7 @@ const decreaseQuantity = (id) => {
 - removeProductFromCart should remove the product from the cart
 */
 
-const removeProductFromCart = (id) => {
+function removeProductFromCart(id) {
   // iterate over cart as well as product list/ update both accordingly
   // removing specific product from both arrays
   findProduct(id, products, product => {
@@ -140,7 +140,7 @@ const removeProductFromCart = (id) => {
 */
 
 // operateOnList performs a specified operation through a callBack function over a given array
-const operateOnList = (list, callBack) => {
+function operateOnList(list, callBack) {
   for (const item of list) {
     callBack(item)
   }
@@ -149,7 +149,7 @@ const operateOnList = (list, callBack) => {
 
 //cartTotal iterates over cart counting all items price, 
 // multiplied by quantity providing collective total
-const cartTotal = () => {
+function cartTotal() {
   let total = 0
 
   for (const item of cart) {
@@ -162,7 +162,7 @@ const cartTotal = () => {
 
 /* Create a function called emptyCart that empties the products from the cart */
 
-const emptyCart = () => {
+function emptyCart() {
   //  iterate over products to reset quantity using operateOnList helper 
   //  overwriting to new cart 
   operateOnList(products, product => {
@@ -178,7 +178,7 @@ const emptyCart = () => {
   - pay will return a positive number if money should be returned to customer
 */
 
-const pay = (amount) => {
+function pay(amount) {
   // adds to amount paid by customer
   totalPaid += amount
   // if customer has reached amount to be paid or paid above price then
